@@ -1,0 +1,11 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+paths:
+  /api/files/upload:
+    post:
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+swagger: "2.0"
