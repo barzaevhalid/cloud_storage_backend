@@ -12,6 +12,7 @@ import (
 	"github.com/barzaevhalid/cloud_storage_backend/routes"
 	"github.com/barzaevhalid/cloud_storage_backend/services"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
 
 	_ "github.com/barzaevhalid/cloud_storage_backend/docs"
@@ -47,6 +48,7 @@ func main() {
 	fileHandler := handlers.NewFileHandler(fileService)
 
 	app := fiber.New()
+	app.Use(cors.New())
 	app.Static("/uploads", "./uploads")
 	app.Get("/swagger/*", swagger.HandlerDefault)
 

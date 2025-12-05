@@ -54,7 +54,6 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 // POST /login
 func (h *UserHandler) Login(c *fiber.Ctx) error {
 	var req LoginRequest
-
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
 	}
@@ -62,14 +61,14 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 	if err := utils.Validate.Struct(req); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	accesToken, refreshToken, err := h.UserService.Login(req.Email, req.Password)
-
+	accessToken, refreshToken, err := h.UserService.Login(req.Email, req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
+	fmt.Println("test------", accessToken)
 
 	return c.JSON(fiber.Map{
-		"acces_token":   accesToken,
+		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
 }
@@ -92,8 +91,6 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 
 func (h *UserHandler) GetMe(c *fiber.Ctx) error {
 	userId := c.Locals("user_id").(int64)
-
-	fmt.Println(userId, "==========")
 
 	u, err := h.UserService.GetMe(userId)
 

@@ -39,7 +39,7 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
-	err = h.FileService.SaveFileMetadata(1, file, filename)
+	id, err := h.FileService.SaveFileMetadata(1, file, filename)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
@@ -48,8 +48,8 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	fileUrl := fmt.Sprintf("/uploads/%s", filename)
 
 	return c.JSON(fiber.Map{
-		"status":       "OK",
-		"fileName":     filename,
+		"id":           id,
+		"filename":     filename,
 		"originalName": file.Filename,
 		"mimeType":     file.Header.Get("Content-Type"),
 		"size":         file.Size,

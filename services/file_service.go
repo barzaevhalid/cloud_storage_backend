@@ -18,7 +18,7 @@ func NewFileService(r *repositories.FileRepository) *FileService {
 	}
 }
 
-func (s *FileService) SaveFileMetadata(userId int64, fileHeader *multipart.FileHeader, filename string) error {
+func (s *FileService) SaveFileMetadata(userId int64, fileHeader *multipart.FileHeader, filename string) (int, error) {
 
 	file := &models.File{
 		UserID:       userId,
@@ -27,12 +27,12 @@ func (s *FileService) SaveFileMetadata(userId int64, fileHeader *multipart.FileH
 		MimeType:     fileHeader.Header.Get("Content-Type"),
 		Size:         fileHeader.Size,
 	}
-	err := s.FileRepository.Save(file)
+	id, err := s.FileRepository.Save(file)
 
 	if err != nil {
-		return fmt.Errorf("Canot save file : %w", err)
+		return 0, fmt.Errorf("Canot save file : %w", err)
 	}
-	return nil
+	return id, nil
 }
 
 func (s *FileService) FindAllFiles(userId int64, fileType string) ([]*models.File, error) {

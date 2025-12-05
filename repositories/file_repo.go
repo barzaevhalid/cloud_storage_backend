@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/barzaevhalid/cloud_storage_backend/models"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -16,16 +15,22 @@ func NewFileRepository(db *pgxpool.Pool) *FileRepository {
 	return &FileRepository{db: db}
 }
 
-func (r *FileRepository) Save(file *models.File) error {
-	fmt.Println("test--------")
-	_, err := r.db.Exec(
+func (r *FileRepository) Save(file *models.File) (int, error) {
+	var id int
+	err := r.db.QueryRow(
 		context.Background(),
 		`INSERT INTO files (user_id, filename, originalname, mimetype, size)
-		VALUES($1,$2,$3,$4,$5)
-		`,
+     VALUES($1, $2, $3, $4, $5)
+     RETURNING id`,
 		file.UserID, file.Filename, file.OriginalName, file.MimeType, file.Size,
-	)
-	return err
+	).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+
 }
 
 func (s *FileRepository) FindAllFiles(userId int64, fileType string) ([]*models.File, error) {
