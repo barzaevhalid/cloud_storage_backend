@@ -39,7 +39,9 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
-	id, err := h.FileService.SaveFileMetadata(1, file, filename)
+	userId := c.Locals("user_id").(int64)
+
+	id, err := h.FileService.SaveFileMetadata(userId, file, filename)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})

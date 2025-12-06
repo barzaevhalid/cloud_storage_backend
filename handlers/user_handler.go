@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/barzaevhalid/cloud_storage_backend/services"
@@ -65,7 +64,6 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
-	fmt.Println("test------", accessToken)
 
 	return c.JSON(fiber.Map{
 		"access_token":  accessToken,

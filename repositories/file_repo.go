@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/barzaevhalid/cloud_storage_backend/models"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -34,6 +35,7 @@ func (r *FileRepository) Save(file *models.File) (int, error) {
 }
 
 func (s *FileRepository) FindAllFiles(userId int64, fileType string) ([]*models.File, error) {
+	fmt.Println(userId, "test--------")
 
 	baseQuery := `SELECT id, filename, originalname, mimetype, size, user_id, deletedat
 		FROM files
@@ -67,6 +69,7 @@ func (s *FileRepository) FindAllFiles(userId int64, fileType string) ([]*models.
 		}
 		files = append(files, &f)
 	}
+	fmt.Println(files, "files")
 	return files, nil
 
 }
